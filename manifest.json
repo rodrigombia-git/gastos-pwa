@@ -1,13 +1,43 @@
+{
+    "name": "Gastos Familiares",
+    "short_name": "Gastos",
+    "description": "Carga rápida de gastos familiares",
+    "start_url": "/gastos-pwa/",
+    "scope": "/gastos-pwa/",
+    "display": "standalone",
+    "background_color": "#F9FAFB",
+    "theme_color": "#4F46E5",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "icons/icon-192.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "any maskable"
         },
         {
-            {
-                "src": "icons/icon-192.png",
-                "sizes": "192x192"
-            }
-        ]
-    }
-]
+            "src": "icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": [
+        "finance",
+        "productivity"
+    ],
+    "shortcuts": [
+        {
+            "name": "Nuevo Gasto",
+            "short_name": "Gasto",
+            "description": "Agregar un nuevo gasto",
+            "url": "/gastos-pwa/",
+            "icons": [
+                {
+                    "src": "icons/icon-192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        }
+    ]
 }
