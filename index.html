@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -8,20 +9,21 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Gastos">
-    
+
     <title>💸 Gastos Rápidos</title>
-    
+
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
-    
+
     <!-- Icons -->
     <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
     <link rel="apple-touch-icon" href="icons/icon-192.png">
-    
+
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <!-- Login Screen -->
     <div id="loginScreen" class="screen">
@@ -29,39 +31,41 @@
             <div class="logo">💸</div>
             <h1>Gastos Rápidos</h1>
             <p class="subtitle">Inicia sesión para continuar</p>
-            
+
             <form id="loginForm" class="form">
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="tu@email.com" required autocomplete="email">
+                    <input type="email" id="email" name="email" placeholder="tu@email.com" required
+                        autocomplete="email">
                 </div>
-                
+
                 <div class="form-group">
                     <label for="password">Contraseña</label>
-                    <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+                    <input type="password" id="password" name="password" placeholder="••••••••" required
+                        autocomplete="current-password">
                 </div>
-                
+
                 <div class="form-group checkbox-group">
                     <label class="checkbox-label">
                         <input type="checkbox" id="rememberMe" checked>
                         <span>Recordarme en este dispositivo</span>
                     </label>
                 </div>
-                
+
                 <button type="submit" class="btn btn-primary btn-block">
                     <span class="btn-text">Iniciar Sesión</span>
                     <span class="btn-loader" style="display: none;">Cargando...</span>
                 </button>
-                
+
                 <div id="loginError" class="error-message" style="display: none;"></div>
             </form>
-            
+
             <div class="info-box">
                 <p>💡 <strong>Tip:</strong> Guarda esta página en tu pantalla de inicio para acceso ultra-rápido</p>
             </div>
         </div>
     </div>
-    
+
     <!-- Main App Screen -->
     <div id="appScreen" class="screen" style="display: none;">
         <div class="container">
@@ -71,67 +75,102 @@
                     <span>🚪</span>
                 </button>
             </div>
-            
+
             <form id="expenseForm" class="form">
                 <div class="form-group">
                     <label for="amount">💰 Monto</label>
-                    <input 
-                        type="number" 
-                        id="amount" 
-                        name="amount" 
-                        placeholder="0.00" 
-                        step="0.01" 
-                        min="0" 
-                        required
-                        inputmode="decimal"
-                        autocomplete="off">
+                    <input type="number" id="amount" name="amount" placeholder="0.00" step="0.01" min="0" required
+                        inputmode="decimal" autocomplete="off">
                 </div>
-                
+
                 <div class="form-group">
                     <label for="description">📝 Descripción</label>
-                    <input 
-                        type="text" 
-                        id="description" 
-                        name="description" 
-                        placeholder="Ej: Almuerzo, Uber, Supermercado..." 
-                        required
-                        maxlength="100"
-                        autocomplete="off">
+                    <input type="text" id="description" name="description"
+                        placeholder="Ej: Almuerzo, Uber, Supermercado..." required maxlength="100" autocomplete="off">
                 </div>
-                
+
                 <div class="form-group">
                     <label for="account">💳 Cuenta</label>
                     <select id="account" name="account" required>
                         <option value="">Selecciona una cuenta...</option>
                     </select>
                 </div>
-                
+
+                <!-- Selector de mes de imputación (solo para tarjetas de crédito) -->
+                <div id="imputacionSection" class="form-group" style="display: none;">
+                    <label>💳 Mes de Imputación</label>
+                    <p class="form-hint">Selecciona cuándo se imputará este gasto a la tarjeta</p>
+
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="imputacion" value="siguiente" checked>
+                            <span id="labelSiguiente">Mes siguiente</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="imputacion" value="dos_meses">
+                            <span id="labelDosMeses">Dentro de 2 meses</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="imputacion" value="manual">
+                            <span>Selección manual</span>
+                        </label>
+                    </div>
+
+                    <!-- Selectores manuales (ocultos por defecto) -->
+                    <div id="manualImputacion" style="display: none; margin-top: 1rem;">
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 1;">
+                                <label for="mesManual">Mes</label>
+                                <select id="mesManual">
+                                    <option value="1">Enero</option>
+                                    <option value="2">Febrero</option>
+                                    <option value="3">Marzo</option>
+                                    <option value="4">Abril</option>
+                                    <option value="5">Mayo</option>
+                                    <option value="6">Junio</option>
+                                    <option value="7">Julio</option>
+                                    <option value="8">Agosto</option>
+                                    <option value="9">Septiembre</option>
+                                    <option value="10">Octubre</option>
+                                    <option value="11">Noviembre</option>
+                                    <option value="12">Diciembre</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label for="anioManual">Año</label>
+                                <input type="number" id="anioManual" min="2020" max="2050">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label for="category">📂 Categoría</label>
                     <select id="category" name="category" required>
                         <option value="">Selecciona una categoría...</option>
                     </select>
                 </div>
-                
+
                 <button type="submit" class="btn btn-primary btn-block">
                     <span class="btn-text">💾 GUARDAR GASTO</span>
                     <span class="btn-loader" style="display: none;">Guardando...</span>
                 </button>
-                
+
                 <div id="expenseError" class="error-message" style="display: none;"></div>
                 <div id="expenseSuccess" class="success-message" style="display: none;"></div>
             </form>
         </div>
     </div>
-    
+
     <!-- Loading Screen -->
     <div id="loadingScreen" class="screen loading-screen" style="display: none;">
         <div class="loader"></div>
         <p>Cargando...</p>
     </div>
-    
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>
 </body>
+
 </html>

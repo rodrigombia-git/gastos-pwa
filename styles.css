@@ -6,21 +6,21 @@
     --success-color: #10B981;
     --error-color: #EF4444;
     --warning-color: #F59E0B;
-    
+
     --bg-color: #F9FAFB;
     --surface-color: #FFFFFF;
     --text-primary: #111827;
     --text-secondary: #6B7280;
     --border-color: #E5E7EB;
-    
+
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    
+
     --radius-sm: 0.375rem;
     --radius-md: 0.5rem;
     --radius-lg: 0.75rem;
-    
+
     --spacing-xs: 0.5rem;
     --spacing-sm: 0.75rem;
     --spacing-md: 1rem;
@@ -87,8 +87,15 @@ body {
 }
 
 @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 /* ===== TYPOGRAPHY ===== */
@@ -158,35 +165,6 @@ select:focus {
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
-input::placeholder {
-    color: var(--text-secondary);
-}
-
-/* Number input - remove spinners */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-input[type="number"] {
-    -moz-appearance: textfield;
-}
-
-/* Select styling */
-select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
-    background-position: right 0.5rem center;
-    background-repeat: no-repeat;
-    background-size: 1.5em 1.5em;
-    padding-right: 2.5rem;
-}
-
-/* Checkbox */
-.checkbox-group {
-    margin-bottom: var(--spacing-md);
-}
-
 .checkbox-label {
     display: flex;
     align-items: center;
@@ -201,6 +179,54 @@ select {
     margin-right: var(--spacing-sm);
     cursor: pointer;
     accent-color: var(--primary-color);
+}
+
+/* Form hint */
+.form-hint {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: -0.25rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Radio group */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 400;
+    font-size: 0.875rem;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    transition: background-color 0.2s ease;
+}
+
+.radio-label:hover {
+    background-color: var(--bg-color);
+}
+
+.radio-label input[type="radio"] {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin-right: var(--spacing-sm);
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+/* Form row */
+.form-row {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.form-row .form-group {
+    margin-bottom: 0;
 }
 
 /* ===== BUTTONS ===== */
@@ -290,6 +316,7 @@ select {
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -327,7 +354,9 @@ select {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .loading-screen p {
@@ -340,11 +369,11 @@ select {
     .form {
         padding: var(--spacing-lg);
     }
-    
+
     h1 {
         font-size: 1.5rem;
     }
-    
+
     .logo {
         font-size: 3rem;
     }
@@ -352,17 +381,20 @@ select {
 
 /* ===== TOUCH IMPROVEMENTS ===== */
 @media (hover: none) and (pointer: coarse) {
+
     input[type="text"],
     input[type="email"],
     input[type="password"],
     input[type="number"],
     select,
     .btn {
-        font-size: 16px; /* Prevent zoom on iOS */
+        font-size: 16px;
+        /* Prevent zoom on iOS */
     }
-    
+
     .btn {
-        min-height: 3.5rem; /* Larger touch targets */
+        min-height: 3.5rem;
+        /* Larger touch targets */
     }
 }
 

@@ -186,9 +186,36 @@ function populateSelect(selectElement, items, valueKey = 'id', textKey = 'nombre
 
     if (selectElement.id === 'account' && lastAccount) {
         selectElement.value = lastAccount;
+        // Trigger change event to check if it's a credit card
+        checkAccountType(lastAccount);
     }
     if (selectElement.id === 'category' && lastCategory) {
         selectElement.value = lastCategory;
+    }
+}
+
+// Check account type and show/hide imputation selector
+async function checkAccountType(accountId) {
+    if (!accountId) {
+        imputacionSection.style.display = 'none';
+        return;
+    }
+
+    try {
+        const { data: account } = await supabaseClient
+            .from('cuentas')
+            .select('tipo')
+            .eq('id', accountId)
+            .single();
+
+        if (account && account.tipo === 'tarjeta_credito') {
+            imputacionSection.style.display = 'block';
+            updateImputacionLabels();
+        } else {
+            imputacionSection.style.display = 'none';
+        }
+    } catch (e) {
+        console.error('Error checking account type:', e);
     }
 }
 
@@ -208,7 +235,7 @@ function calculateImputationMonth(fechaGasto, isCreditCard) {
 }
 
 function isCreditCard(accountType) {
-    return accountType === 'credito';
+    return accountType === 'tarjeta_credito';
 }
 
 async function updateAccountBalance(accountId, amount, accountType) {
@@ -297,7 +324,7 @@ expenseForm.addEventListener('submit', async (e) => {
             .single();
 
         const today = new Date().toISOString().split('T')[0];
-        const imputation = calculateImputationMonth(today, isCreditCard(account.tipo));
+        const imputation = calculateImputationFromSelector(today, isCreditCard(account.tipo));
 
         const expenseData = {
             hogar_id: userData.hogar_id,
@@ -338,6 +365,82 @@ expenseForm.addEventListener('submit', async (e) => {
         setLoading(expenseForm, false);
     }
 });
+
+// ===== IMPUTATION SELECTOR LOGIC =====
+const accountSelect = document.getElementById('account');
+const imputacionSection = document.getElementById('imputacionSection');
+const manualImputacion = document.getElementById('manualImputacion');
+const imputacionRadios = document.querySelectorAll('input[name="imputacion"]');
+
+// Show/hide imputation selector based on account type
+accountSelect.addEventListener('change', function () {
+    checkAccountType(this.value);
+});
+
+// Update labels with calculated dates
+function updateImputacionLabels() {
+    const today = new Date();
+    const mesSiguiente = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const dosMeses = new Date(today.getFullYear(), today.getMonth() + 2, 1);
+
+    const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+    document.getElementById('labelSiguiente').textContent =
+        `Mes siguiente (${meses[mesSiguiente.getMonth()]} ${mesSiguiente.getFullYear()})`;
+    document.getElementById('labelDosMeses').textContent =
+        `Dentro de 2 meses (${meses[dosMeses.getMonth()]} ${dosMeses.getFullYear()})`;
+
+    // Set default values for manual selection
+    const mesManual = document.getElementById('mesManual');
+    const anioManual = document.getElementById('anioManual');
+    mesManual.value = mesSiguiente.getMonth() + 1;
+    anioManual.value = mesSiguiente.getFullYear();
+}
+
+// Show/hide manual selection
+imputacionRadios.forEach(radio => {
+    radio.addEventListener('change', function () {
+        if (this.value === 'manual') {
+            manualImputacion.style.display = 'block';
+        } else {
+            manualImputacion.style.display = 'none';
+        }
+    });
+});
+
+// Calculate imputation month based on selection
+function calculateImputationFromSelector(fechaGasto, isCreditCard) {
+    if (!isCreditCard) {
+        const date = new Date(fechaGasto);
+        return {
+            month: date.getMonth() + 1,
+            year: date.getFullYear()
+        };
+    }
+
+    const selectedOption = document.querySelector('input[name="imputacion"]:checked').value;
+    const date = new Date(fechaGasto);
+
+    if (selectedOption === 'siguiente') {
+        date.setMonth(date.getMonth() + 1);
+        return {
+            month: date.getMonth() + 1,
+            year: date.getFullYear()
+        };
+    } else if (selectedOption === 'dos_meses') {
+        date.setMonth(date.getMonth() + 2);
+        return {
+            month: date.getMonth() + 1,
+            year: date.getFullYear()
+        };
+    } else { // manual
+        return {
+            month: parseInt(document.getElementById('mesManual').value),
+            year: parseInt(document.getElementById('anioManual').value)
+        };
+    }
+}
 
 logoutBtn.addEventListener('click', async () => {
     if (confirm('¿Cerrar sesión?')) {
